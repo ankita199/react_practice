@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import classes from './Calculator.module.css'
+
 const initialUserInput = {
   'current-savings': 10000,
   'yearly-contribution': 1200,
@@ -22,15 +24,15 @@ export default function Calculator(props) {
     setUserInput((prevState) => {
       return {
         ...prevState,
-        [input]: value
+        [input]: +value
       }
     })
   }
 
 
   return (
-    <form onSubmit={submitHandler} className="form">
-      <div className="input-group">
+    <form onSubmit={submitHandler} className={classes.form}>
+      <div className={classes["input-group"]}>
         <p>
           <label htmlFor="current-savings">Current Savings ($)</label>
           <input value={userInput['current-savings']} onChange={(event) => inputChangeHandler('current-savings', event.target.value)} type="number" id="current-savings" />
@@ -40,7 +42,7 @@ export default function Calculator(props) {
           <input value={userInput['yearly-contribution']} onChange={(event) => inputChangeHandler('number', event.target.value)} type="number" id="yearly-contribution" />
         </p>
       </div>
-      <div className="input-group">
+      <div className={classes["input-group"]}>
         <p>
           <label htmlFor="expected-return">
             Expected Interest (%, per year)
@@ -52,11 +54,11 @@ export default function Calculator(props) {
           <input value={userInput['duration']} onChange={(event) => inputChangeHandler('duration', event.target.value)} type="number" id="duration" />
         </p>
       </div>
-      <p className="actions">
-        <button onClick={resetHandler} type="reset" className="buttonAlt">
+      <p className={classes["actions"]}>
+        <button onClick={resetHandler} type="reset" className={classes["buttonAlt"]}>
           Reset
         </button>
-        <button type="submit" className="button">
+        <button type="submit" className={classes["button"]}>
           Calculate
         </button>
       </p>

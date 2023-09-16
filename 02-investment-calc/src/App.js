@@ -1,6 +1,6 @@
-import Header from './Header'
-import Calculator from './Calculator'
-import Result from './Result'
+import Header from './Header/Header'
+import Calculator from './UserInput/Calculator'
+import Result from './ResultTable/Result'
 import { useState } from 'react'
 
 function App() {
@@ -31,7 +31,7 @@ function App() {
     <div>
       <Header />
       <Calculator onCalc={calculateHandler} />
-      {!userInput && <p>No Investment Found!!</p>}
+      {!userInput && <p style={{textAlign: 'center'}}>No Investment Found!!</p>}
       {userInput && <Result data={yearlyData} initialInvestment={userInput['current-savings']} />}
     </div>
   );
