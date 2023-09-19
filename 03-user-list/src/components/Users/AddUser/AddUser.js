@@ -1,16 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState,Fragment,useRef} from 'react';
 import Card from '../../UI/Card/Card.js'
 import Button from '../../UI/Button/Button.js'
 import ErrorModal from '../../UI/ErrorModal/ErrorModal.js'
-import Wrapper from '../../Helpers/Wrapper.js'
+// import Wrapper from '../../Helpers/Wrapper.js'
 import classes from './AddUser.module.css'
 
 const AddUser = (props) => {
-  const [enteredUsername, setEnteredUsername] = useState('');
-  const [enteredAge, setEnteredAge] = useState('');
+  const usernameRef = useRef();
+  const ageRef = useRef();
   const [error, setError] = useState();
   const addUserHandler =(event) =>{
     event.preventDefault();
+    const enteredUsername = usernameRef.current.value
+    const enteredAge = ageRef.current.value
     if(enteredUsername.trim().length === 0 || enteredAge.trim().length === 0){
       setError({
         title: "Invalid input",
@@ -26,31 +28,23 @@ const AddUser = (props) => {
       return;
     }
     props.onAddUser(enteredUsername,enteredAge);
-    setEnteredUsername('');
-    setEnteredAge('')
   };
-  const usernameChangeHandler = (event) => {
-    setEnteredUsername(event.target.value);
-  }
-  const ageChangeHandler = (event) => {
-    setEnteredAge(event.target.value);
-  }
   const errorHandler = () => {
     setError(null)
   }
   return(
-    <Wrapper>
+    <Fragment>
       {error && <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />}
       <Card className={classes.input}>
         <form onSubmit={addUserHandler}>
           <label htmlFor="username">Username</label>
-          <input id="username" type="text" onChange={usernameChangeHandler} />
+          <input id="username" type="text" ref={usernameRef} />
           <label htmlFor="age">Age (Years)</label>
-          <input id="age" type="number" onChange={ageChangeHandler}/>
+          <input id="age" type="number" ref={ageRef}/>
           <Button type="submit">Add User</Button>
         </form>
       </Card>
-    </Wrapper>
+    </Fragment>
   )
 }
 
