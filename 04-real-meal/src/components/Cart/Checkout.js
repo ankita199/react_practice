@@ -1,4 +1,4 @@
-import React,{ useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import classes from "./Checkout.module.css";
 
@@ -47,8 +47,12 @@ const Checkout = (props) => {
     if (!formIsValid) {
       return;
     }
-
-    // Submit cart data
+    props.onConfirm({
+      name: enteredName,
+      street: enteredStreet,
+      city: enteredCity,
+      postalCode: enteredPostalCode,
+    });
   };
 
   const nameControlClasses = `${classes.control} ${

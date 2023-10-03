@@ -1,10 +1,11 @@
-import React,{ useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import Modal from "../UI/Modal";
 import CartItem from "./CartItem";
 import classes from "./Cart.module.css";
 import CartContext from "../../store/cart-context";
 import Checkout from "./Checkout";
+import useHttp from "../../hooks/use-http"
 
 const Cart = (props) => {
   const [isCheckout, setIsCheckout] = useState(false);
@@ -23,6 +24,19 @@ const Cart = (props) => {
 
   const orderHandler = () => {
     setIsCheckout(true);
+  };
+  const { isLoading, error, sendRequest: saveOrder } = useHttp();
+
+  const submitOrderHandler = (userData) => {
+    console.log("submit order handler");
+    saveOrder({
+      url: "https://-default-rtdb.firebaseio.com/orders.json",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: { userData: userData, orderData: cartCtx.items },
+    });
   };
 
   const cartItems = (
@@ -60,7 +74,9 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {isCheckout && <Checkout onCancel={props.onClose} />}
+      {isCheckout && (
+        <Checkout onConfirm={submitOrderHandler} onCancel={props.onClose} />
+      )}
       {!isCheckout && modalActions}
     </Modal>
   );

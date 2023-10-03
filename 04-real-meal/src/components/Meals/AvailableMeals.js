@@ -13,7 +13,7 @@ const AvailableMeals = () => {
     console.log(process.env);
     const fetchMeals = async () => {
       const response = await fetch(
-        "https://associatesoftlabs-default-rtdb.firebaseio.com/meals.json"
+        "https://-default-rtdb.firebaseio.com/meals.json"
       );
 
       if (!response.ok) {
