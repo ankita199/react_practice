@@ -1,14 +1,16 @@
 import { Outlet } from "react-router-dom";
+
 import MainNavigation from "../components/MainNavigation";
-const Root = () => {
+
+function RootLayout() {
   return (
     <>
-      <MainNavigation>
-        <main>
-          <Outlet></Outlet>
-        </main>
-      </MainNavigation>
+      <MainNavigation />
+      <main>
+        <Outlet />
+      </main>
     </>
   );
-};
-export default Root;
+}
+
+export default RootLayout;
