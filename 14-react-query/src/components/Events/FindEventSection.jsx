@@ -5,12 +5,14 @@ import { fetchEvents } from "../../util/http";
 import EventItem from "./EventItem";
 import LoadingIndicator from "../UI/LoadingIndicator";
 import ErrorBlock from "../UI/ErrorBlock";
+import Modal from "../UI/Modal";
+import { Link } from "react-router-dom";
 
 export default function FindEventSection() {
   const searchElement = useRef();
   const [searchTerm, setSearchTerm] = useState();
 
-  const { data, isError, isLoading, error } = useQuery({
+  const { data, isError, isPending, error } = useQuery({
     queryKey: ["events", { searchTerm: searchTerm }],
     queryFn: ({ filter }) => fetchEvents({ filter, searchTerm }),
     enabled: searchTerm != undefined,
@@ -21,47 +23,50 @@ export default function FindEventSection() {
     setSearchTerm(searchElement.current.value);
   }
 
-  let content = <p>Please enter a search term and to find events.</p>;
+  function handleClose() {
+    navigate("../");
+  }
+  let content;
 
-  if (isLoading) {
-    content = <LoadingIndicator />;
+  if (isPending) {
+    content = (
+      <div className="center">
+        <LoadingIndicator />
+      </div>
+    );
   }
 
   if (isError) {
     content = (
-      <ErrorBlock
-        title="An error occurred"
-        message={error.info?.message || "Failed to fetch events."}
-      />
+      <>
+        <ErrorBlock
+          title="Failed to load event"
+          message={
+            error.info?.message ||
+            "Failed to load event. Please check your inputs and try again later."
+          }
+        />
+        <div className="form-actions">
+          <Link to="../" className="button">
+            Okay
+          </Link>
+        </div>
+      </>
     );
   }
 
   if (data) {
     content = (
-      <ul className="events-list">
-        {data.map((event) => (
-          <li key={event.id}>
-            <EventItem event={event} />
-          </li>
-        ))}
-      </ul>
+      <EventForm inputData={data} onSubmit={handleSubmit}>
+        <Link to="../" className="button-text">
+          Cancel
+        </Link>
+        <button type="submit" className="button">
+          Update
+        </button>
+      </EventForm>
     );
   }
 
-  return (
-    <section className="content-section" id="all-events-section">
-      <header>
-        <h2>Find your next event!</h2>
-        <form onSubmit={handleSubmit} id="search-form">
-          <input
-            type="search"
-            placeholder="Search events"
-            ref={searchElement}
-          />
-          <button>Search</button>
-        </form>
-      </header>
-      {content}
-    </section>
-  );
+  return <Modal onClose={handleClose}>{content}</Modal>;
 }
